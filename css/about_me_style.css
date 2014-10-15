@@ -1,0 +1,32 @@
+
+.about_me{
+
+	position: relative;
+	top:110px;
+	border-radius: 30px;
+	background: #FFC30D;
+	height:60%;
+	width:80%;
+	padding: 0px;
+	margin: 0 10%;
+}
+
+.profile{
+	
+	float: left;
+	border: 8px;
+	border-style: solid;
+	border-color: #663300;
+	margin: 5%  2% 2% 2%;
+	width: 10%;
+}
+
+.information{
+
+	
+	position: relative;
+	font-weight: 900;
+	font-size: 20px;
+	padding: 5%;
+	color: #000000;
+}

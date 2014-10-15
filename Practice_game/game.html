@@ -1,0 +1,245 @@
+<!Doctype html>
+
+<head>
+	<title>My facy Game</title>
+</head>
+	
+
+<body>
+	<canvas id="canvas" style="border: 1px solid #000"></canvas>
+	<script src="player.js"></script>
+  <script src="coin.js"></script>
+	<script>
+		(function() {
+   		 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+   		
+   		 window.requestAnimationFrame = requestAnimationFrame;
+		
+		})();
+
+		var canvas = document.getElementById("canvas"),
+		ctx = canvas.getContext("2d"),
+		width = 500,
+		height = 200,
+		keys = [],
+		friction = 0.9,
+		gravity = 0.3,
+    numCoins = 15;
+    
+		/*Declares the players and puts them into an array*/
+		var player1 = new Player("Azam","brown",width/2,height-5);
+		var player2 = new Player("Nabil","green",width/3,height-5);
+    
+    var imageCoin = new Image;
+    imageCoin.src = "bitcoin.jpg";
+    var coinSound = new Audio('coin.wav');
+    var jumpSound = new Audio('jump.wav');
+    
+		var players =[player1,player2];
+    var coins = {};
+
+    /*Instiate all the coins with random locations on the canvas*/
+    for(i=0; i<numCoins; i++){
+
+        coins[i] = new Coin((Math.random() *495) + 5,(Math.random()*195)+6);
+    }
+
+		canvas.width = width;
+		canvas.height = height; 
+		
+	/*Returns true if there is going to be a collision*/
+  function checkCollision(player1, player2){
+
+      return !(player1.bottom < player2.top || player1.top > player2.bottom ||
+        player1.left > player2.right || player1.right <player2.left);
+  }
+	function drawPlayer(currentPlayer){
+      ctx.fillStyle= currentPlayer.color;
+      ctx.fillRect(currentPlayer.x, currentPlayer.y,currentPlayer.width,currentPlayer.height);
+  }
+  
+  function movePlayer1(currentPlayer){
+      if (keys[38] ) {
+           // up arrow or space
+           if(!currentPlayer.jumping){
+            jumpSound.play();
+           }
+           
+          currentPlayer.jump();
+          
+      }
+      if (keys[39]) {
+             // right arrow
+             currentPlayer.goRight();     
+      }          
+      if (keys[37]) {                 
+            currentPlayer.goLeft();
+      }
+  }
+  
+  function movePlayer2(currentPlayer){
+  
+    if (keys[87]){
+      //w key
+       if(!currentPlayer.jumping){
+            jumpSound.play();
+      }  
+      currentPlayer.jump();
+     
+    }
+    if(keys[65]){
+      //a key
+      currentPlayer.goLeft();
+    }
+    if(keys[68])
+      //d key
+      currentPlayer.goRight();
+  }
+  
+  function drawCoins(coins){
+    
+    
+    for(var i=0; i<numCoins;i++){
+      
+      if(coins[i].stillExists){
+        
+        ctx.drawImage(imageCoin,coins[i].x,coins[i].y);
+      }
+    }
+
+  }
+
+  function checkCoinCollision(currentPlayer){
+
+    
+    for(var i =0; i<numCoins;i++){
+
+      if(coins[i].stillExists){
+
+        if(!(currentPlayer.bottom < coins[i].top || currentPlayer.top > coins[i].bottom ||
+        currentPlayer.left > coins[i].right || currentPlayer.right < coins[i].left)){
+          
+          coins[i].stillExists = false;
+          coinSound.play();
+          currentPlayer.coins++;
+        }
+
+      }
+    }
+  }
+
+
+  /*Function that takes the array of players and renders them*/
+		function update(playerz,coins){
+
+		  for(var i=0; i<playerz.length;i++){
+
+				var currentPlayer = playerz[i];
+				
+			   // check keys
+			   var previous_x = currentPlayer.x, previous_y = currentPlayer.y;
+   			
+        if(currentPlayer.name=="Azam"){
+          movePlayer1(currentPlayer);
+
+        }
+
+        if(currentPlayer.name=="Nabil"){
+          movePlayer2(currentPlayer);
+        }
+        /*Slows down the player so they dont keep moving*/
+        currentPlayer.velX *=friction;
+        currentPlayer.velY +=gravity;
+
+     
+       			   /*Update collision locations*/
+        currentPlayer.top = currentPlayer.y;
+     	  currentPlayer.left = currentPlayer.x;
+        currentPlayer.right = currentPlayer.x+currentPlayer.width;
+        currentPlayer.bottom = currentPlayer.y+currentPlayer.height;
+
+        if(Math.abs(currentPlayer.velY) < 0.1){
+          currentPlayer.velY = 0;
+        }
+
+        if(i+1 == playerz.length && checkCollision(currentPlayer,playerz[0])){
+      		/*Player 2 is going to collide with player1*/
+          currentPlayer.velX = -currentPlayer.velX;
+          currentPlayer.velY = -currentPlayer.velY;
+
+          playerz[0].velY=-playerz[0].velY;
+          playerz[0].velX=-playerz[0].velX;
+        }
+        else if(i==0 &&checkCollision(currentPlayer,playerz[1])) {
+          /*Player 1 is going to collide with player2*/
+          var magnTtlVelP1 = Math.sqrt()
+          currentPlayer.velX = -currentPlayer.velX;
+          currentPlayer.velY = -currentPlayer.velY;
+          playerz[1].velY= -playerz[1].velY;
+          playerz[1].velX= -playerz[1].velX;
+          
+        }
+        
+          
+           /*Updates the current position of the player*/
+        currentPlayer.x += currentPlayer.velX;
+        currentPlayer.y += currentPlayer.velY;
+
+        /*Checks to make sure the player hasnt hit the right and left boundaries*/
+        if(currentPlayer.x >=width-currentPlayer.width){
+          currentPlayer.x= width-currentPlayer.width;
+        }else if(currentPlayer.x<=0){
+          currentPlayer.x = 0;
+        }
+        /*Checks to make sure the player hasnt hit the top boundary*/
+
+        if(currentPlayer.y>=height-currentPlayer.height){
+          currentPlayer.y = height-currentPlayer.height;
+          currentPlayer.jumping=false;
+          currentPlayer.velY = 0;
+        }
+
+        /*Check to see if the player has collided with any of the coins*/
+        checkCoinCollision(currentPlayer);
+        
+      }
+      ctx.clearRect(0,0,width,height);
+
+      ctx.fillStyle ='#0EB7D8';
+      ctx.fillRect(0,0,width,height);
+     
+
+      for(i=0;i<playerz.length;i++){
+        drawPlayer(playerz[i]);
+      }
+      /*Call function to paint coins on*/
+        drawCoins(coins);
+      
+    	// run through the loop again
+    	requestAnimationFrame(function(){
+    		update(playerz,coins);
+
+    	});
+		
+    }
+
+		
+document.body.addEventListener("keydown", function(e) {
+
+    keys[e.keyCode] = true;
+   
+});
+ 
+document.body.addEventListener("keyup", function(e) {
+    keys[e.keyCode] = false;
+    
+});
+ 
+window.addEventListener("load",function(){
+
+    update(players,coins);
+
+});
+	
+	</script>
+</body>

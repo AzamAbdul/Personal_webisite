@@ -1,0 +1,11 @@
+.projectlist{
+
+	position: relative;
+	top:110px;
+	border-radius: 30px;
+	background: #28B25C;
+	height:100%;
+	width:80%;
+	padding: 0px;
+	margin: 0 10%;
+}

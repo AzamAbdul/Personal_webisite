@@ -1,0 +1,78 @@
+
+
+
+@keyframes blink{
+	50%{
+		color: rgba(255,255,255,0.8);
+	}
+}
+@-webkit-keyframes blink {
+ 	 50%{
+    	color: rgba(255,255,255,0.8);
+  	}
+}
+@-moz-keyframes blink {
+ 	50%{
+    	color: rgba(255,255,255,0.8);
+  	}
+}
+
+.top{
+
+	position: relative;
+
+	text-align: center;
+	font-size: 25px;
+	padding-top: 100px;
+	overflow: hidden;
+
+}
+.cursor{
+
+	animation: blink 1s infinite;
+  	-webkit-animation: blink 1s infinite;
+  	-moz-animation: blink 1s infinite;
+  	position: relative;
+
+  	color: #4E4E56;
+	font-size: 20px;
+	z-index: -1;
+	top: -27px;
+	left: 176px;
+	
+}
+
+
+h2{
+
+	font-size: 20px;
+}
+p{
+	position: relative;
+	font-weight: 600;
+	font-size: 20px;
+	top: 30px;
+	left: 50px;
+}
+
+.gamebox{
+
+	position: relative;
+	border-radius: 30px;
+	
+	margin: 0 10%;
+	height:98%;
+	width:80%;
+	background:#7183DB;
+}
+.canvas{
+
+	position: relative;
+	border-radius: 10px;
+	top: 70px;
+	width:80%;
+	margin: 0 10%;
+	background: #ffffff;
+}
+/*need to fix the margins when the browser is decreased to a size smaller than the cursor and the
+padding of the navigator*/
