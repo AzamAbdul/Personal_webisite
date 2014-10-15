@@ -1,4 +1,7 @@
 
+.container{
+	overflow: scroll;
+}
 .about_me{
 
 	position: relative;
