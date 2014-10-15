@@ -29,7 +29,20 @@
 }
 .blind_spot{
 	position: relative;
-	top:75px;
+	top:55px;
+	border-radius: 10px;
+	background: #437F5A;
+	font-weight: 900;
+	color: #000000;
+	width: 84%;
+	height: auto;
+	margin: 0% 5%;
+	padding: 3%;
+	font-size: 15px;
+}
+.more_to_come{
+	position: relative;
+	top:85px;
 	border-radius: 10px;
 	background: #437F5A;
 	font-weight: 900;
